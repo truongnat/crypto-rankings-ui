@@ -7,28 +7,29 @@ import Chart from "./Chart";
 export default function CoinChartContainer({ slug }) {
   const router = useRouter();
   const [coinHistory, setCoinHistory] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
-      const result = await axios.get(
-        `http://localhost:8080/api/v1/coins/${slug}/24h`
-      );
-      setCoinHistory(result.data);
-      setLoading(false);
+      if (slug || router.query.slug) {
+        const result = await axios.get(
+          `${process.env.NEXT_PUBLIC_BASE_URL}coins/${
+            slug || router.query.slug
+          }/24h`
+        );
+        setCoinHistory(result.data);
+      }
     };
     fetchData();
-  }, []);
+  }, [router.query.slug, slug]);
 
   const fetchHistoryData = async (e, timePeriod) => {
     e.preventDefault();
-    setLoading(true);
     const result = await axios.get(
-      `http://localhost:8080/api/v1/coins/${slug}/${timePeriod}`
+      `${process.env.NEXT_PUBLIC_BASE_URL}coins/${
+        slug || router.query.slug
+      }/${timePeriod}`
     );
     setCoinHistory(result.data);
-    setLoading(false);
   };
 
   return (
@@ -59,7 +60,7 @@ export default function CoinChartContainer({ slug }) {
         <h2 className="font-extrabold text-4xl text-gray-800">{slug}</h2>
       </div>
       <div className="flex mx-auto">
-        <Chart coinHistory={coinHistory} />
+        {coinHistory.length && <Chart coinHistory={coinHistory} />}
       </div>
       <div className="flex mx-auto mt-12">
         <button

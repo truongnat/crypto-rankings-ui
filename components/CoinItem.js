@@ -2,9 +2,16 @@ import { useRouter } from "next/router";
 
 export default function CoinItem({ coin }) {
   const router = useRouter();
+
+  function navigateDetail() {
+    router.push({
+      pathname: "/coin/[slug]",
+      query: { slug: coin.symbol },
+    });
+  }
   return (
     <tr
-      onClick={() => router.push(`/coin/${coin.symbol}`)}
+      onClick={() => navigateDetail()}
       className="cursor-pointer hover:bg-gray-100  transition-all duration-150"
     >
       <td className="p-2 whitespace-nowrap">

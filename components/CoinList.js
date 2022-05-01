@@ -4,17 +4,15 @@ import CoinItem from "./CoinItem";
 
 export default function CoinList() {
   const [coins, setCoins] = useState([]);
-  const [loading, setLoading] = useState(false);
+
+  const fetchData = async () => {
+    const result = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}coins`);
+    setCoins(result.data);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
-
-  const fetchData = async () => {
-    setLoading(true);
-    const result = await axios.get("http://localhost:8080/api/v1/coins");
-    setCoins(result.data);
-    setLoading(false);
-  };
 
   return (
     <section className="antialiased  text-gray-600 h-screen px-4">
